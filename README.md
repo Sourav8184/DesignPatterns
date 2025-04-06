@@ -16,24 +16,28 @@
 
 - A database connection should be created once and shared to prevent multiple expensive connections.
 
-```java
-public class DBConnectionPool {
-    private static DBConnectionPool instance;
+```typescript
+class DBConnectionPool {
+  private static instance: DBConnectionPool;
 
-    private DBConnectionPool() {
-        // Initialize pool (e.g., setup connections)
-    }
+  // Private constructor to prevent direct instantiation
+  private constructor() {
+    // Initialize connection pool (e.g., create pool, configure connections)
+    console.log("🔧 Initializing DB Connection Pool...");
+  }
 
-    public static DBConnectionPool getInstance() {
-        if (instance == null) {
-            instance = new DBConnectionPool();
-        }
-        return instance;
+  // Static method to get the single instance
+  public static getInstance(): DBConnectionPool {
+    if (!DBConnectionPool.instance) {
+      DBConnectionPool.instance = new DBConnectionPool();
     }
+    return DBConnectionPool.instance;
+  }
 
-    public void getConnection() {
-        System.out.println("Getting a DB connection from the pool...");
-    }
+  // Sample method to simulate getting a connection
+  public getConnection(): void {
+    console.log("🔌 Getting a DB connection from the pool...");
+  }
 }
 ```
 
@@ -41,24 +45,26 @@ public class DBConnectionPool {
 
 A single logger instance ensures that all logs are written to the same file or output stream.
 
-```java
-public class Logger {
-    private static Logger instance;
+```typescript
+class Logger {
+  private static instance: Logger;
 
-    private Logger() {}
+  // Private constructor to prevent direct instantiation
+  private constructor() {}
 
-    public static Logger getInstance() {
-        if (instance == null) {
-            instance = new Logger();
-        }
-        return instance;
+  // Static method to get the single shared instance
+  public static getInstance(): Logger {
+    if (!Logger.instance) {
+      Logger.instance = new Logger();
     }
+    return Logger.instance;
+  }
 
-    public void log(String msg) {
-        System.out.println("[LOG] " + msg);
-    }
+  // Logging method
+  public log(msg: string): void {
+    console.log(`[LOG] ${msg}`);
+  }
 }
-
 ```
 
 #### 3️⃣ Thread Safety in Singleton Pattern
@@ -229,13 +235,13 @@ public class Singleton {
 
 - Instead of this in client code:
 
-```java
+```typescript
 Shape shape = new Circle(); // tight coupling
 ```
 
 - You do this:
 
-```java
+```typescript
 Shape shape = ShapeFactory.getShape("circle"); // factory handles creation
 ```
 
@@ -255,7 +261,7 @@ Shape shape = ShapeFactory.getShape("circle"); // factory handles creation
 
 - Your client code works with:
 
-```java
+```typescript
 interface Shape { void draw(); }
 ```
 
@@ -280,7 +286,7 @@ interface Shape { void draw(); }
 - Want to add a Triangle shape?
 - Just update the factory:
 
-```java
+```typescript
 if (type.equals("triangle")) return new Triangle();
 ```
 
@@ -302,8 +308,7 @@ if (type.equals("triangle")) return new Triangle();
 
 - Any part of the application that needs a Shape object uses:
 
-```java
-
+```typescript
 Shape shape = ShapeFactory.getShape("circle");
 ```
 
@@ -315,7 +320,7 @@ Shape shape = ShapeFactory.getShape("circle");
 - 🚗 Example 1: Car Manufacturing
   - Different car types (Sedan, SUV, Truck) can be created using a CarFactory instead of directly instantiating objects.
 
-```java
+```typescript
 Car car1 = CarFactory.getCar("SUV");
 Car car2 = CarFactory.getCar("Sedan");
 ```
@@ -323,7 +328,7 @@ Car car2 = CarFactory.getCar("Sedan");
 - 💳 Example 2: Payment System
   - A payment system where a factory creates objects of CreditCardPayment, PayPalPayment, or BankTransfer dynamically.
 
-```java
+```typescript
 Payment payment = PaymentFactory.getPayment("CreditCard");
 payment.process();
 ```
@@ -331,7 +336,7 @@ payment.process();
 - 🐶 Example 3: Animal Creation
   - A Zoo application where we create different animals (Dog, Cat, Tiger) using a Factory.
 
-```java
+```typescript
 Animal animal = AnimalFactory.getAnimal("Dog");
 animal.speak(); // Output: "Woof Woof!"
 ```
@@ -342,7 +347,7 @@ animal.speak(); // Output: "Woof Woof!"
 
 - This defines the common methods for the objects created by the factory.
 
-```java
+```typescript
 interface Animal {
     void speak();
 }
@@ -352,7 +357,7 @@ interface Animal {
 
 - These are the actual classes that implement the interface.
 
-```java
+```typescript
 class Dog implements Animal {
     public void speak() {
     System.out.println("Woof Woof!");
@@ -370,7 +375,7 @@ class Cat implements Animal {
 
 - This class has a getAnimal() method to return different object types based on input.
 
-```java
+```typescript
 class AnimalFactory {
     public static Animal getAnimal(String type) {
     if (type.equalsIgnoreCase("Dog")) {
@@ -385,7 +390,7 @@ class AnimalFactory {
 
 ### Step 4: Use the Factory Class in Main Program
 
-```java
+```typescript
 public class FactoryPatternDemo {
     public static void main(String[] args) {
     Animal animal1 = AnimalFactory.getAnimal("Dog");
@@ -425,8 +430,7 @@ public class FactoryPatternDemo {
 
 #### 1️⃣ Strategy Interface
 
-```java
-
+```typescript
 interface PaymentStrategy {
   pay(amount: number): void;
 }
@@ -434,8 +438,7 @@ interface PaymentStrategy {
 
 #### 2️⃣ Concrete Strategies
 
-```java
-
+```typescript
 class CreditCardPayment implements PaymentStrategy {
   pay(amount: number): void {
     console.log(`Paid ₹${amount} using Credit Card`);
@@ -457,7 +460,7 @@ class PayPalPayment implements PaymentStrategy {
 
 #### 3️⃣ Context (uses the strategy)
 
-```java
+```jatypescriptva
 
 class PaymentContext {
   private strategy: PaymentStrategy;
@@ -474,8 +477,7 @@ class PaymentContext {
 
 #### ✅ Usage
 
-```java
-
+```typescript
 const strategy1 = new Strategy(new CreditCard());
 strategy1.pay(100);
 
@@ -496,8 +498,7 @@ strategy3.pay(300);
 
 #### 🧨 Without Strategy (Bad Approach)
 
-```java
-
+```typescript
 function pay(amount: number, method: string) {
   if (method === "card") {
     console.log("Paying by card...");
@@ -513,7 +514,7 @@ function pay(amount: number, method: string) {
 
 # 🧠 Core Difference
 
-```java
+```typescript
 🔁 Factory vs Strategy Design Pattern Comparison
 
 ✅ Purpose
@@ -557,7 +558,7 @@ function pay(amount: number, method: string) {
 
 #### 1️⃣ Observer Interface
 
-```java
+```typescript
 interface Observer {
   update(temp: number): void;
 }
@@ -565,7 +566,7 @@ interface Observer {
 
 #### 2️⃣ Subject Interface
 
-```java
+```typescript
 interface Subject {
   addObserver(observer: Observer): void;
   removeObserver(observer: Observer): void;
@@ -575,7 +576,7 @@ interface Subject {
 
 #### 3️⃣ Concrete Subject (WeatherStation)
 
-```java
+```typescript
 class WeatherStation implements Subject {
   private observers: Observer[] = [];
   private temperature: number = 0;
@@ -585,7 +586,7 @@ class WeatherStation implements Subject {
   }
 
   removeObserver(observer: Observer): void {
-    this.observers = this.observers.filter(obs => obs !== observer);
+    this.observers = this.observers.filter((obs) => obs !== observer);
   }
 
   setTemperature(temp: number): void {
@@ -603,8 +604,7 @@ class WeatherStation implements Subject {
 
 #### 4️⃣ Concrete Observers (Displays)
 
-```java
-
+```typescript
 class MobileApp implements Observer {
   update(temp: number): void {
     console.log(`📱 Mobile App: Temperature updated to ${temp}°C`);
@@ -620,8 +620,7 @@ class WebsiteDisplay implements Observer {
 
 #### ✅ Usage
 
-```java
-
+```typescript
 const weatherStation = new WeatherStation();
 
 const mobileApp = new MobileApp();
@@ -640,3 +639,151 @@ weatherStation.setTemperature(31);
 // 📱 Mobile App: Temperature updated to 31°C
 // 💻 Website: Temperature is now 31°C
 ```
+
+# 🧩 Facade Design Pattern
+
+- The Facade Pattern is a structural design pattern that provides a simplified interface to a complex system of classes, libraries, or APIs.
+
+- Facade = One simple interface that calls multiple complex subsystems for you.
+
+### 🏡 Real-Life Analogy
+
+- 🧍‍♂️ You (Client) want to watch a movie at home:
+
+#### You need to:
+
+- Turn on the TV
+
+- Switch to HDMI
+
+- Start the speaker system
+
+- Dim the lights
+
+- Start the movie
+
+- 💡 Instead, you press one button on your remote:
+- ✅ "Watch Movie"
+
+- 🎬 Behind that button is a facade that handles all those steps for you.
+
+### 💻 Code Example in TypeScript
+
+- 🧪 Scenario: Home Theater System
+
+#### 1️⃣ Subsystem Classes (Individual components)
+
+```typescript
+class TV {
+  on() {
+    console.log("📺 TV is ON");
+  }
+  off() {
+    console.log("📺 TV is OFF");
+  }
+}
+
+class SoundSystem {
+  on() {
+    console.log("🔊 Sound System is ON");
+  }
+  off() {
+    console.log("🔇 Sound System is OFF");
+  }
+}
+
+class Lights {
+  dim() {
+    console.log("💡 Lights are dimmed");
+  }
+  on() {
+    console.log("💡 Lights are ON");
+  }
+}
+
+class MoviePlayer {
+  play() {
+    console.log("🎞️ Movie is playing");
+  }
+  stop() {
+    console.log("⏹️ Movie stopped");
+  }
+}
+```
+
+#### 2️⃣ Facade Class
+
+```typescript
+class HomeTheaterFacade {
+  private tv: TV;
+  private sound: SoundSystem;
+  private lights: Lights;
+  private player: MoviePlayer;
+
+  constructor(tv: TV, sound: SoundSystem, lights: Lights, player: MoviePlayer) {
+    this.tv = tv;
+    this.sound = sound;
+    this.lights = lights;
+    this.player = player;
+  }
+
+  watchMovie(): void {
+    console.log("🎬 Setting up movie night...");
+    this.lights.dim();
+    this.tv.on();
+    this.sound.on();
+    this.player.play();
+  }
+
+  endMovie(): void {
+    console.log("🔚 Shutting down movie setup...");
+    this.player.stop();
+    this.sound.off();
+    this.tv.off();
+    this.lights.on();
+  }
+}
+```
+
+#### 3️⃣ Client Code (You!)
+
+```typescript
+const tv = new TV();
+const sound = new SoundSystem();
+const lights = new Lights();
+const player = new MoviePlayer();
+
+const homeTheater = new HomeTheaterFacade(tv, sound, lights, player);
+
+// One-line magic
+homeTheater.watchMovie();
+
+// Later...
+homeTheater.endMovie();
+```
+
+#### 🟢 Output:
+
+```types
+🎬 Setting up movie night...
+💡 Lights are dimmed
+📺 TV is ON
+🔊 Sound System is ON
+🎞️ Movie is playing
+
+🔚 Shutting down movie setup...
+⏹️ Movie stopped
+🔇 Sound System is OFF
+📺 TV is OFF
+💡 Lights are ON
+```
+
+#### 👨‍💻 Bonus Ideas:
+
+- You can use this pattern for:
+
+- Booking systems (travel, hotel)
+
+- Food delivery (order, notify, assign rider, track)
+
+- Microservices gateway (API Gateway facade)
