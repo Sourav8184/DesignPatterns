@@ -430,8 +430,6 @@ public class FactoryPatternDemo {
 interface PaymentStrategy {
   pay(amount: number): void;
 }
-
-
 ```
 
 #### 2️⃣ Concrete Strategies
@@ -455,8 +453,6 @@ class PayPalPayment implements PaymentStrategy {
     console.log(`Paid ₹${amount} using PayPal`);
   }
 }
-
-
 ```
 
 #### 3️⃣ Context (uses the strategy)
@@ -474,8 +470,6 @@ class PaymentContext {
     this.strategy.pay(amount);
   }
 }
-
-
 ```
 
 #### ✅ Usage
@@ -490,9 +484,6 @@ strategy2.pay(200);
 
 const strategy3 = new Strategy(new PayPal());
 strategy3.pay(300);
-
-
-
 ```
 
 #### ✅ Benefits
@@ -515,8 +506,6 @@ function pay(amount: number, method: string) {
   }
   // etc.
 }
-
-
 ```
 
 - 👎 Difficult to maintain, extend, or test.
@@ -546,4 +535,108 @@ function pay(amount: number, method: string) {
 🔄 Change behavior
 - Factory: No (it gives you an object, then you're on your own)
 - Strategy: Yes! You can change the algorithm dynamically at runtime
+```
+
+# 🧩 What is the Observer Design Pattern
+
+- The Observer Pattern is a behavioral design pattern where an object (called Subject) maintains a list of dependents (called Observers) and notifies them automatically of any changes to its state.When one object changes, all dependent objects are automatically updated.
+
+### 📱 Real-Life Example: YouTube Channel
+
+- 🧑‍🏫 You (Subject) are a YouTube Creator.
+
+- 👥 Subscribers (Observers) want to be notified when you upload a video.
+
+- When you publish a new video (change in state), all subscribers get a notification.
+
+### 💻 Code Example
+
+#### 🧪 Scenario: Weather Station
+
+- We want to notify multiple displays (e.g., Mobile App, Website) whenever the temperature changes.
+
+#### 1️⃣ Observer Interface
+
+```java
+interface Observer {
+  update(temp: number): void;
+}
+```
+
+#### 2️⃣ Subject Interface
+
+```java
+interface Subject {
+  addObserver(observer: Observer): void;
+  removeObserver(observer: Observer): void;
+  notifyObservers(): void;
+}
+```
+
+#### 3️⃣ Concrete Subject (WeatherStation)
+
+```java
+class WeatherStation implements Subject {
+  private observers: Observer[] = [];
+  private temperature: number = 0;
+
+  addObserver(observer: Observer): void {
+    this.observers.push(observer);
+  }
+
+  removeObserver(observer: Observer): void {
+    this.observers = this.observers.filter(obs => obs !== observer);
+  }
+
+  setTemperature(temp: number): void {
+    this.temperature = temp;
+    this.notifyObservers();
+  }
+
+  notifyObservers(): void {
+    for (let observer of this.observers) {
+      observer.update(this.temperature);
+    }
+  }
+}
+```
+
+#### 4️⃣ Concrete Observers (Displays)
+
+```java
+
+class MobileApp implements Observer {
+  update(temp: number): void {
+    console.log(`📱 Mobile App: Temperature updated to ${temp}°C`);
+  }
+}
+
+class WebsiteDisplay implements Observer {
+  update(temp: number): void {
+    console.log(`💻 Website: Temperature is now ${temp}°C`);
+  }
+}
+```
+
+#### ✅ Usage
+
+```java
+
+const weatherStation = new WeatherStation();
+
+const mobileApp = new MobileApp();
+const websiteDisplay = new WebsiteDisplay();
+
+weatherStation.addObserver(mobileApp);
+weatherStation.addObserver(websiteDisplay);
+
+weatherStation.setTemperature(28);
+// Output:
+// 📱 Mobile App: Temperature updated to 28°C
+// 💻 Website: Temperature is now 28°C
+
+weatherStation.setTemperature(31);
+// Output:
+// 📱 Mobile App: Temperature updated to 31°C
+// 💻 Website: Temperature is now 31°C
 ```
