@@ -396,3 +396,154 @@ public class FactoryPatternDemo {
     }
 }
 ```
+
+# 🧩 Strategy Design Pattern
+
+- The Strategy Pattern is a behavioral design pattern that allows you to define a family of algorithms, put each of them in a separate class, and make them interchangeable at runtime.
+
+### ✅ When to Use Strategy Pattern
+
+- When you have multiple variations of an algorithm or behavior
+
+- When you want to choose behavior at runtime
+
+- When you want to avoid large if/else or switch statements
+
+- When behaviors are likely to change independently
+
+### How to Implement Strategy Pattern (Step by Step)
+
+#### Scenario: Payment Gateway
+
+- You want to support multiple payment methods:
+
+- 💳 Credit Card
+
+- 🧾 UPI
+
+- 💼 PayPal
+
+#### 1️⃣ Strategy Interface
+
+```java
+
+interface PaymentStrategy {
+  pay(amount: number): void;
+}
+
+
+```
+
+#### 2️⃣ Concrete Strategies
+
+```java
+
+class CreditCardPayment implements PaymentStrategy {
+  pay(amount: number): void {
+    console.log(`Paid ₹${amount} using Credit Card`);
+  }
+}
+
+class UpiPayment implements PaymentStrategy {
+  pay(amount: number): void {
+    console.log(`Paid ₹${amount} using UPI`);
+  }
+}
+
+class PayPalPayment implements PaymentStrategy {
+  pay(amount: number): void {
+    console.log(`Paid ₹${amount} using PayPal`);
+  }
+}
+
+
+```
+
+#### 3️⃣ Context (uses the strategy)
+
+```java
+
+class PaymentContext {
+  private strategy: PaymentStrategy;
+
+  constructor(strategy: PaymentStrategy) {
+    this.strategy = strategy;
+  }
+
+  pay(amount: number): void {
+    this.strategy.pay(amount);
+  }
+}
+
+
+```
+
+#### ✅ Usage
+
+```java
+
+const strategy1 = new Strategy(new CreditCard());
+strategy1.pay(100);
+
+const strategy2 = new Strategy(new Upi());
+strategy2.pay(200);
+
+const strategy3 = new Strategy(new PayPal());
+strategy3.pay(300);
+
+
+
+```
+
+#### ✅ Benefits
+
+- 📦 Open/Closed Principle — Add new strategies without changing the client
+
+- 🔄 Runtime flexibility — Change behavior on the fly
+
+- 🔧 Reusability — Separate behavior into self-contained classes
+
+#### 🧨 Without Strategy (Bad Approach)
+
+```java
+
+function pay(amount: number, method: string) {
+  if (method === "card") {
+    console.log("Paying by card...");
+  } else if (method === "upi") {
+    console.log("Paying by UPI...");
+  }
+  // etc.
+}
+
+
+```
+
+- 👎 Difficult to maintain, extend, or test.
+- 👎 Breaks the Single Responsibility Principle.
+
+# 🧠 Core Difference
+
+```java
+🔁 Factory vs Strategy Design Pattern Comparison
+
+✅ Purpose
+- Factory: To create objects
+- Strategy: To choose an algorithm/behavior at runtime
+
+🧱 Focus
+- Factory: Object creation
+- Strategy: Object behavior
+
+🎯 Used for
+- Factory: Deciding which class instance to return
+- Strategy: Deciding which behavior/algorithm to use
+
+🧠 Logic lives in
+- Factory: The Factory class (encapsulates object creation logic)
+- Strategy: The Strategy classes (each has a different behavior implementation)
+
+🔄 Change behavior
+- Factory: No (it gives you an object, then you're on your own)
+- Strategy: Yes! You can change the algorithm dynamically at runtime
+```
