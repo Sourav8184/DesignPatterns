@@ -206,3 +206,193 @@ public class Singleton {
     }
 }
 ```
+
+# 🧩 Factory Design Pattern
+
+- The Factory Design Pattern is a creational design pattern that provides an interface for creating objects, but lets subclasses decide which class to instantiate. Instead of using the new keyword, the Factory Method is used to create objects.
+
+### Why Use Factory Design Pattern?
+
+#### 1️⃣ Encapsulation of Object Creation – Hides the object creation logic from the client.
+
+- The client (user of the class) doesn't need to know how the object is created. The factory hides the complex logic of creating an object.
+
+#### 🎯 Why it’s useful:
+
+- Reduces complexity in the main code
+
+- Keeps object creation logic in one place
+
+- Makes your code cleaner and easier to manage
+
+#### 📦 Example:
+
+- Instead of this in client code:
+
+```java
+Shape shape = new Circle(); // tight coupling
+```
+
+- You do this:
+
+```java
+Shape shape = ShapeFactory.getShape("circle"); // factory handles creation
+```
+
+#### 2️⃣ Loose Coupling – The client code depends on an interface, not specific implementations.
+
+- The client code only knows about the interface or abstract class, not the specific class being used.
+
+#### 🎯 Why it’s useful:
+
+- Makes the system flexible and easy to extend
+
+- You can change the implementation without changing client code
+
+- Encourages programming to interfaces, not implementations
+
+#### 🧩 Example:
+
+- Your client code works with:
+
+```java
+interface Shape { void draw(); }
+```
+
+- It doesn't care whether it's a Circle, Square, or Rectangle.
+
+- Factory handles it internally.
+
+#### 3️⃣ Improved Code Maintainability – Adding new classes does not require changes in client code.
+
+- You can add or remove object types without modifying the client code.
+
+#### 🎯 Why it’s useful:
+
+- Follows the Open/Closed Principle (open for extension, closed for modification)
+
+- Less risk of bugs when making changes
+
+- Easier to update or upgrade specific classes
+
+#### 🛠️ Example:
+
+- Want to add a Triangle shape?
+- Just update the factory:
+
+```java
+if (type.equals("triangle")) return new Triangle();
+```
+
+- No changes in client code!
+
+#### 4️⃣ Code Reusability – Centralized object creation improves code reusability.
+
+- The factory method can be reused wherever you need to create those objects.
+
+#### 🎯 Why it’s useful:
+
+- Avoids repeating object creation logic
+
+- Centralizes changes to creation logic
+
+- Keeps code DRY (Don’t Repeat Yourself)
+
+#### ♻️ Example:
+
+- Any part of the application that needs a Shape object uses:
+
+```java
+
+Shape shape = ShapeFactory.getShape("circle");
+```
+
+- Same logic used everywhere
+- Easy to test and debug
+
+### Real-World Examples of Factory Design Pattern
+
+- 🚗 Example 1: Car Manufacturing
+  - Different car types (Sedan, SUV, Truck) can be created using a CarFactory instead of directly instantiating objects.
+
+```java
+Car car1 = CarFactory.getCar("SUV");
+Car car2 = CarFactory.getCar("Sedan");
+```
+
+- 💳 Example 2: Payment System
+  - A payment system where a factory creates objects of CreditCardPayment, PayPalPayment, or BankTransfer dynamically.
+
+```java
+Payment payment = PaymentFactory.getPayment("CreditCard");
+payment.process();
+```
+
+- 🐶 Example 3: Animal Creation
+  - A Zoo application where we create different animals (Dog, Cat, Tiger) using a Factory.
+
+```java
+Animal animal = AnimalFactory.getAnimal("Dog");
+animal.speak(); // Output: "Woof Woof!"
+```
+
+### How to Implement Factory Pattern (Step by Step)
+
+#### Step 1: Create an Interface or Abstract Class
+
+- This defines the common methods for the objects created by the factory.
+
+```java
+interface Animal {
+    void speak();
+}
+```
+
+#### Step 2: Create Concrete Classes
+
+- These are the actual classes that implement the interface.
+
+```java
+class Dog implements Animal {
+    public void speak() {
+    System.out.println("Woof Woof!");
+    }
+}
+
+class Cat implements Animal {
+    public void speak() {
+    System.out.println("Meow Meow!");
+    }
+}
+```
+
+### Step 3: Create a Factory Class
+
+- This class has a getAnimal() method to return different object types based on input.
+
+```java
+class AnimalFactory {
+    public static Animal getAnimal(String type) {
+    if (type.equalsIgnoreCase("Dog")) {
+        return new Dog();
+    } else if (type.equalsIgnoreCase("Cat")) {
+        return new Cat();
+    }
+    return null;
+    }
+}
+```
+
+### Step 4: Use the Factory Class in Main Program
+
+```java
+public class FactoryPatternDemo {
+    public static void main(String[] args) {
+    Animal animal1 = AnimalFactory.getAnimal("Dog");
+    animal1.speak(); // Output: Woof Woof!
+
+    Animal animal2 = AnimalFactory.getAnimal("Cat");
+    animal2.speak();  // Output: Meow Meow!
+    }
+}
+```
