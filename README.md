@@ -893,3 +893,117 @@ console.log(coffee.description(), "₹" + coffee.cost());
 coffee = new SugarDecorator(coffee);
 console.log(coffee.description(), "₹" + coffee.cost());
 ```
+
+# 🧩 What is the Adapter Pattern
+
+- The Adapter pattern allows incompatible interfaces to work together. It acts like a bridge between two incompatible interfaces.
+
+### 💡 Example Scenario: Media Player Adapter
+
+#### ✅ Step 1: Target Interface
+
+```typescript
+// Target Interface
+interface MediaPlayer {
+  play(audioType: string, fileName: string): void;
+}
+```
+
+#### ✅ Step 2: Adaptee Interface and Concrete Classes
+
+```typescript
+// Adaptee Interface
+interface AdvancedMediaPlayer {
+  playVlc(fileName: string): void;
+  playMp4(fileName: string): void;
+}
+
+// Concrete Adaptee 1
+class VlcPlayer implements AdvancedMediaPlayer {
+  playVlc(fileName: string): void {
+    console.log(`Playing vlc file: ${fileName}`);
+  }
+
+  playMp4(fileName: string): void {
+    // Do nothing
+  }
+}
+
+// Concrete Adaptee 2
+class Mp4Player implements AdvancedMediaPlayer {
+  playVlc(fileName: string): void {
+    // Do nothing
+  }
+
+  playMp4(fileName: string): void {
+    console.log(`Playing mp4 file: ${fileName}`);
+  }
+}
+```
+
+#### ✅ Step 3: Adapter
+
+```typescript
+// Adapter
+class MediaAdapter implements MediaPlayer {
+  private advancedPlayer: AdvancedMediaPlayer;
+
+  constructor(audioType: string) {
+    if (audioType === "vlc") {
+      this.advancedPlayer = new VlcPlayer();
+    } else if (audioType === "mp4") {
+      this.advancedPlayer = new Mp4Player();
+    } else {
+      throw new Error("Unsupported format");
+    }
+  }
+
+  play(audioType: string, fileName: string): void {
+    if (audioType === "vlc") {
+      this.advancedPlayer.playVlc(fileName);
+    } else if (audioType === "mp4") {
+      this.advancedPlayer.playMp4(fileName);
+    }
+  }
+}
+```
+
+#### ✅ Step 4: AudioPlayer using the Adapter
+
+```typescript
+/// Concrete Class using Adapter
+class AudioPlayer implements MediaPlayer {
+  play(audioType: string, fileName: string): void {
+    if (audioType === "mp3") {
+      console.log(`Playing mp3 file: ${fileName}`);
+    } else if (audioType === "vlc" || audioType === "mp4") {
+      const adapter = new MediaAdapter(audioType);
+      adapter.play(audioType, fileName);
+    } else {
+      console.log(
+        "Invalid media format. Only mp3, mp4, and vlc are supported."
+      );
+    }
+  }
+}
+```
+
+#### ✅ Step 5: Usage
+
+```typescript
+const player = new AudioPlayer();
+
+player.play("mp3", "song.mp3");
+player.play("mp4", "video.mp4");
+player.play("vlc", "movie.vlc");
+player.play("avi", "weird.avi");
+```
+
+#### 🖨️ Output
+
+```typescript
+Playing mp3 file: song.mp3
+Playing mp4 file: video.mp4
+Playing vlc file: movie.vlc
+Invalid media format. Only mp3, mp4, and vlc are supported.
+```
