@@ -460,8 +460,7 @@ class PayPalPayment implements PaymentStrategy {
 
 #### 3️⃣ Context (uses the strategy)
 
-```jatypescriptva
-
+```typescript
 class PaymentContext {
   private strategy: PaymentStrategy;
 
@@ -787,3 +786,110 @@ homeTheater.endMovie();
 - Food delivery (order, notify, assign rider, track)
 
 - Microservices gateway (API Gateway facade)
+
+# 🧩 Decorator Design Pattern
+
+- The Decorator Pattern is a structural design pattern that: Allows you to dynamically add new behaviors or responsibilities to an object without modifying its structure or code.
+
+### 🧠 Think of it like:
+
+- Wrapping a gift 🎁 — each wrapper adds something (a label, a bow, a message) without changing the gift itself.
+
+### 🛠 Why Use Decorator Pattern?
+
+- ✅ Follows Open/Closed Principle – open for extension, closed for modification.
+
+- ✅ Avoids subclass explosion (instead of creating many subclasses for every feature combination).
+
+- ✅ Adds behavior at runtime, not compile time.
+
+### 🏠 Real-world Example
+
+- Example: Coffee Shop ☕
+  You have a basic coffee. You want to add milk, sugar, whipped cream, etc., without modifying the base Coffee class.
+
+### ✅ Step-by-Step Code
+
+#### 1️⃣ Base Component (Interface)
+
+```typescript
+interface Coffee {
+  cost(): number;
+  description(): string;
+}
+```
+
+#### 2️⃣ Concrete Component
+
+```typescript
+class SimpleCoffee implements Coffee {
+  cost(): number {
+    return 50;
+  }
+
+  description(): string {
+    return "Simple coffee";
+  }
+}
+```
+
+#### 3️⃣ Decorator Base Class
+
+```typescript
+class CoffeeDecorator implements Coffee {
+  constructor(private coffee: Coffee) {}
+
+  cost(): number {
+    return this.coffee.cost();
+  }
+
+  description(): string {
+    return this.coffee.description();
+  }
+}
+```
+
+#### 4️⃣ Concrete Decorators
+
+```typescript
+class MilkDecorator extends CoffeeDecorator {
+  constructor(coffee: Coffee) {
+    super(coffee);
+  }
+
+  cost(): number {
+    return super.cost() + 20;
+  }
+
+  description(): string {
+    return super.description() + ", Milk";
+  }
+}
+
+class SugarDecorator extends CoffeeDecorator {
+  constructor(coffee: Coffee) {
+    super(coffee);
+  }
+
+  cost(): number {
+    return super.cost() + 10;
+  }
+
+  description(): string {
+    return super.description() + ", Sugar";
+  }
+}
+```
+
+#### 5️⃣ Usage
+
+```typescript
+let coffee: Coffee = new SimpleCoffee();
+console.log(coffee.description(), "₹" + coffee.cost());
+
+coffee = new MilkDecorator(coffee);
+console.log(coffee.description(), "₹" + coffee.cost());
+
+coffee = new SugarDecorator(coffee);
+console.log(coffee.description(), "₹" + coffee.cost());
+```
